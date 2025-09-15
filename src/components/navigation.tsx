@@ -4,10 +4,14 @@ import Link from "next/link"
 import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Menu, X, Zap, Wallet, BarChart3 } from "lucide-react"
+import { Menu, X, Zap, Wallet, BarChart3, Play } from "lucide-react"
 import { cn } from "@/lib/utils"
 
-export function Navigation() {
+interface NavigationProps {
+  onShowWalkthrough?: () => void
+}
+
+export function Navigation({ onShowWalkthrough }: NavigationProps) {
   const [isOpen, setIsOpen] = useState(false)
 
   const navItems = [
@@ -50,10 +54,17 @@ export function Navigation() {
               <BarChart3 className="w-3 h-3 mr-1" />
               Live
             </Badge>
-            <Button className="web3-button">
-              <Wallet className="w-4 h-4 mr-2" />
-              Get Started
-            </Button>
+            {onShowWalkthrough && (
+              <Button 
+                variant="outline" 
+                size="sm"
+                onClick={onShowWalkthrough}
+                className="border-slate-600 text-slate-300 hover:text-white hover:bg-slate-800"
+              >
+                <Play className="w-4 h-4 mr-2" />
+                Tutorial
+              </Button>
+            )}
           </div>
 
           {/* Mobile menu button */}
@@ -85,8 +96,22 @@ export function Navigation() {
                 {item.label}
               </Link>
             ))}
-            <div className="pt-4 border-t border-slate-700">
-              <Button className="w-full web3-button">
+            <div className="pt-4 border-t border-slate-700 space-y-2">
+              {onShowWalkthrough && (
+                <Button 
+                  variant="outline" 
+                  size="sm"
+                  onClick={() => {
+                    onShowWalkthrough()
+                    setIsOpen(false)
+                  }}
+                  className="w-full border-slate-600 text-slate-300 hover:text-white hover:bg-slate-800"
+                >
+                  <Play className="w-4 h-4 mr-2" />
+                  Tutorial
+                </Button>
+              )}
+              <Button className="w-full web3-button-primary">
                 <Wallet className="w-4 h-4 mr-2" />
                 Get Started
               </Button>
