@@ -13,3 +13,46 @@ datasource db {
   provider = "postgresql"
   url      = env("DATABASE_URL")
 }
+
+model License {
+  id          String   @id @default(cuid())
+  licenseKey  String   @unique
+  type        String   // 'switch' or 'validation'
+  status      String   // 'active', 'inactive', 'pending', 'available', 'generated', 'used'
+  createdAt   DateTime @default(now())
+  expiresAt   DateTime
+  rewards     Float    @default(0)
+  nodeId      String?
+  region      String?
+  performance Float    @default(0)
+  uptime      Float    @default(0)
+  stakeAmount Float
+  userId      String?
+  generatedAt DateTime?
+  usedAt      DateTime?
+
+  @@map("licenses")
+}
+
+model User {
+  id        String   @id @default(cuid())
+  email     String   @unique
+  name      String?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  @@map("users")
+}
+
+model Reward {
+  id          String   @id @default(cuid())
+  userId      String
+  licenseId   String
+  amount      Float
+  type        String   // 'mining', 'referral', 'bonus'
+  status      String   // 'pending', 'confirmed', 'paid'
+  createdAt   DateTime @default(now())
+  confirmedAt DateTime?
+
+  @@map("rewards")
+}
