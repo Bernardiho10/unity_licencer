@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find an available license
-    const where = { status: 'available' }
+    const where: Record<string, string> = { status: 'available' }
     if (nodeType) {
       where.nodeType = nodeType
     }
