@@ -18,7 +18,7 @@ export async function GET(request: NextRequest) {
     const rewards = await prisma.reward.findMany({
       where: {
         userId,
-        period
+        period: period
       },
       orderBy: {
         createdAt: 'desc'
@@ -26,8 +26,8 @@ export async function GET(request: NextRequest) {
     })
 
     // Calculate totals
-    const totalMinutesFarmed = rewards.reduce((sum, reward) => sum + reward.minutesFarmed, 0)
-    const totalMntEarned = rewards.reduce((sum, reward) => sum + reward.mntEarned, 0)
+    const totalMinutesFarmed = rewards.reduce((sum, reward) => sum + (reward.minutesFarmed || 0), 0)
+    const totalMntEarned = rewards.reduce((sum, reward) => sum + (reward.mntEarned || 0), 0)
 
     // Mock data for demonstration (in production, this would come from actual call data)
     const mockStats = {
@@ -84,9 +84,12 @@ export async function POST(request: NextRequest) {
     const reward = await prisma.reward.create({
       data: {
         userId,
+        amount: mntEarned,
+        type: 'mining',
+        status: 'confirmed',
+        period,
         minutesFarmed,
-        mntEarned,
-        period
+        mntEarned
       }
     })
 

@@ -45,14 +45,17 @@ model User {
 }
 
 model Reward {
-  id          String   @id @default(cuid())
-  userId      String
-  licenseId   String
-  amount      Float
-  type        String   // 'mining', 'referral', 'bonus'
-  status      String   // 'pending', 'confirmed', 'paid'
-  createdAt   DateTime @default(now())
-  confirmedAt DateTime?
+  id             String   @id @default(cuid())
+  userId         String
+  licenseId      String?
+  amount         Float
+  type           String   // 'mining', 'referral', 'bonus'
+  status         String   // 'pending', 'confirmed', 'paid'
+  period         String?  // 'daily', 'weekly', 'monthly'
+  minutesFarmed  Float?   // minutes farmed for this reward
+  mntEarned      Float?   // MNT earned for this reward
+  createdAt      DateTime @default(now())
+  confirmedAt    DateTime?
 
   @@map("rewards")
 }

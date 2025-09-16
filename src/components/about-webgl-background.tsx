@@ -74,26 +74,16 @@ function ConnectionLine({
   useFrame((state) => {
     if (lineRef.current && animated) {
       const time = state.clock.elapsedTime
-      lineRef.current.material.opacity = 0.3 + Math.sin(time * 2) * 0.2
+      const material = lineRef.current.material as THREE.LineBasicMaterial
+      material.opacity = 0.3 + Math.sin(time * 2) * 0.2
     }
   })
 
   return (
-    <line ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={points.length}
-          array={new Float32Array(points.flatMap(p => [p.x, p.y, p.z]))}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <lineBasicMaterial 
-        color={color} 
-        transparent 
-        opacity={0.4}
-      />
-    </line>
+    <primitive ref={lineRef} object={new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(points),
+      new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.4 })
+    )} />
   )
 }
 
@@ -191,6 +181,7 @@ function DataFlowParticles() {
           count={particleCount}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial 
@@ -255,7 +246,10 @@ function NetworkGrid() {
   useFrame((state) => {
     if (gridRef.current) {
       const time = state.clock.elapsedTime
-      gridRef.current.material.opacity = 0.1 + Math.sin(time * 0.5) * 0.05
+      const material = gridRef.current.material as THREE.Material
+      if ('opacity' in material) {
+        material.opacity = 0.1 + Math.sin(time * 0.5) * 0.05
+      }
       gridRef.current.rotation.y = time * 0.1
     }
   })
@@ -421,18 +415,21 @@ function EnhancedParticleField() {
           count={particleCount}
           array={positions.positions}
           itemSize={3}
+          args={[positions.positions, 3]}
         />
         <bufferAttribute
           attach="attributes-color"
           count={particleCount}
           array={positions.colors}
           itemSize={3}
+          args={[positions.colors, 3]}
         />
         <bufferAttribute
           attach="attributes-size"
           count={particleCount}
           array={positions.sizes}
           itemSize={1}
+          args={[positions.sizes, 1]}
         />
       </bufferGeometry>
       <pointsMaterial 

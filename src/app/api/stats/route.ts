@@ -17,10 +17,10 @@ export async function GET() {
 
     // Get node type breakdown
     const switchNodes = await prisma.license.count({
-      where: { nodeType: 'switch' }
+      where: { type: 'switch' }
     })
     const validationNodes = await prisma.license.count({
-      where: { nodeType: 'validation' }
+      where: { type: 'validation' }
     })
 
     // Get recent activity

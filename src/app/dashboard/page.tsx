@@ -125,7 +125,8 @@ function StatsCard({
   color, 
   delay = 0,
   isAnimated = true,
-  trend = null
+  trend = null,
+  suffix = ''
 }: {
   title: string
   value: number | string
@@ -135,6 +136,7 @@ function StatsCard({
   delay?: number
   isAnimated?: boolean
   trend?: { value: number, isPositive: boolean } | null
+  suffix?: string
 }) {
   const cardRef = useRef<HTMLDivElement>(null)
 
@@ -173,9 +175,9 @@ function StatsCard({
       <CardContent className="relative z-10">
         <div className="text-3xl font-bold text-white mb-1">
           {isAnimated && typeof value === 'number' ? (
-            <AnimatedCounter end={value} />
+            <AnimatedCounter end={value} suffix={suffix} />
           ) : (
-            value
+            `${value}${suffix}`
           )}
         </div>
         <div className="flex items-center justify-between">

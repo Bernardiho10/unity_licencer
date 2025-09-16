@@ -75,17 +75,10 @@ function ConnectionLine({ start, end, color = "#06b6d4" }: { start: [number, num
   }, [start, end])
 
   return (
-    <line ref={lineRef}>
-      <bufferGeometry>
-        <bufferAttribute
-          attach="attributes-position"
-          count={points.length}
-          array={new Float32Array(points.flatMap(p => [p.x, p.y, p.z]))}
-          itemSize={3}
-        />
-      </bufferGeometry>
-      <lineBasicMaterial color={color} transparent opacity={0.6} />
-    </line>
+    <primitive ref={lineRef} object={new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(points),
+      new THREE.LineBasicMaterial({ color, transparent: true, opacity: 0.6 })
+    )} />
   )
 }
 
@@ -126,6 +119,7 @@ function DataFlow({ start, end, color = "#8b5cf6" }: { start: [number, number, n
           count={particleCount}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
@@ -302,6 +296,7 @@ function EnhancedParticleField() {
           count={particleCount}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial

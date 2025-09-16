@@ -147,6 +147,7 @@ function StepConnections() {
                 count={points.length}
                 array={new Float32Array(points.flatMap(p => [p.x, p.y, p.z]))}
                 itemSize={3}
+                args={[new Float32Array(points.flatMap(p => [p.x, p.y, p.z])), 3]}
               />
             </bufferGeometry>
             <lineBasicMaterial 
@@ -198,6 +199,7 @@ function ProgressFlowParticles() {
           count={particleCount}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
@@ -300,6 +302,7 @@ function BackgroundParticles() {
           count={particleCount}
           array={positions}
           itemSize={3}
+          args={[positions, 3]}
         />
       </bufferGeometry>
       <pointsMaterial
