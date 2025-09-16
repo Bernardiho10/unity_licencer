@@ -2,107 +2,119 @@
 
 import { useRef, useEffect, useMemo } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { OrbitControls, Stars, Float } from '@react-three/drei'
+import { OrbitControls, Stars, Float, Text3D, Center } from '@react-three/drei'
 import * as THREE from 'three'
 
-// Step Card Visualization
-function StepCard({ position, step, color = "#3b82f6" }: { 
+// Professional Workflow Panel
+function WorkflowPanel({ position, step, color = "#3b82f6", status = "current" }: { 
   position: [number, number, number], 
   step: number,
-  color?: string 
+  color?: string,
+  status?: "completed" | "current" | "upcoming"
 }) {
-  const cardRef = useRef<THREE.Group>(null)
-  const cardMeshRef = useRef<THREE.Mesh>(null)
+  const panelRef = useRef<THREE.Group>(null)
+  const panelMeshRef = useRef<THREE.Mesh>(null)
+  const progressRef = useRef<THREE.Mesh>(null)
   
   useFrame((state) => {
-    if (cardRef.current) {
-      cardRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3 + step) * 0.1
-      cardRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.5 + step) * 0.2
+    if (panelRef.current) {
+      panelRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.1 + step) * 0.02
+      panelRef.current.position.y = Math.sin(state.clock.elapsedTime * 0.2 + step) * 0.05
     }
-    if (cardMeshRef.current) {
-      cardMeshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.2 + step) * 0.05
+    if (panelMeshRef.current) {
+      panelMeshRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.05 + step) * 0.01
+    }
+    if (progressRef.current && status === "current") {
+      progressRef.current.scale.x = 0.5 + Math.sin(state.clock.elapsedTime * 1.5) * 0.1
     }
   })
 
+  const getStatusColor = () => {
+    switch (status) {
+      case 'completed': return '#10b981'
+      case 'current': return color
+      case 'upcoming': return '#6b7280'
+    }
+  }
+
   return (
-    <group ref={cardRef} position={position}>
-      {/* Card Base */}
-      <mesh ref={cardMeshRef}>
-        <boxGeometry args={[3, 2, 0.1]} />
+    <group ref={panelRef} position={position}>
+      {/* Panel Base */}
+      <mesh ref={panelMeshRef}>
+        <boxGeometry args={[4, 2.5, 0.1]} />
         <meshBasicMaterial
-          color={color}
-          transparent
-          opacity={0.8}
-        />
-      </mesh>
-      
-      {/* Card Border */}
-      <mesh position={[0, 0, 0.06]}>
-        <boxGeometry args={[3.1, 2.1, 0.02]} />
-        <meshBasicMaterial
-          color="#06b6d4"
+          color={getStatusColor()}
           transparent
           opacity={0.6}
         />
       </mesh>
       
+      {/* Panel Border */}
+      <mesh position={[0, 0, 0.06]}>
+        <boxGeometry args={[4.1, 2.6, 0.02]} />
+        <meshBasicMaterial
+          color="#1e293b"
+          transparent
+          opacity={0.8}
+        />
+      </mesh>
+      
+      {/* Progress Bar */}
+      <mesh ref={progressRef} position={[0, -0.8, 0.08]}>
+        <boxGeometry args={[3, 0.1, 0.02]} />
+        <meshBasicMaterial
+          color={getStatusColor()}
+          transparent
+          opacity={0.9}
+        />
+      </mesh>
+      
       {/* Step Number */}
-      <mesh position={[0, 0, 0.08]}>
-        <sphereGeometry args={[0.2, 16, 16]} />
+      <mesh position={[-1.5, 0.8, 0.08]}>
+        <planeGeometry args={[0.4, 0.4]} />
         <meshBasicMaterial
           color="#ffffff"
           transparent
           opacity={0.9}
         />
       </mesh>
-      
-      {/* Energy Rings */}
-      {[1.5, 2, 2.5].map((radius, index) => (
-        <mesh key={radius} position={[0, 0, 0]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[radius, 0.02, 8, 16]} />
-          <meshBasicMaterial
-            color={color}
-            transparent
-            opacity={0.2 - index * 0.05}
-          />
-        </mesh>
-      ))}
     </group>
   )
 }
 
-// Floating Step Cards
-function FloatingStepCards() {
-  const cardsRef = useRef<THREE.Group>(null)
+// Floating Workflow Panels
+function FloatingWorkflowPanels() {
+  const panelsRef = useRef<THREE.Group>(null)
   
   useFrame((state) => {
-    if (cardsRef.current) {
-      cardsRef.current.children.forEach((child, index) => {
+    if (panelsRef.current) {
+      panelsRef.current.children.forEach((child, index) => {
         if (child instanceof THREE.Group) {
           const time = state.clock.elapsedTime
-          child.position.y = Math.sin(time * 0.3 + index) * 0.3
-          child.rotation.y = time * 0.1 + index
+          child.position.y = Math.sin(time * 0.2 + index) * 0.1
+          child.rotation.y = time * 0.05 + index
         }
       })
     }
   })
 
-  const cardPositions = useMemo(() => [
-    { pos: [-8, 0, -3] as [number, number, number], step: 1, color: "#3b82f6" },
-    { pos: [-4, 0, -3] as [number, number, number], step: 2, color: "#8b5cf6" },
-    { pos: [0, 0, -3] as [number, number, number], step: 3, color: "#06b6d4" },
-    { pos: [4, 0, -3] as [number, number, number], step: 4, color: "#10b981" },
-    { pos: [8, 0, -3] as [number, number, number], step: 5, color: "#f59e0b" }
+  const panelPositions = useMemo(() => [
+    { pos: [-8, 0, -3] as [number, number, number], step: 1, color: "#3b82f6", status: "completed" as const },
+    { pos: [-4, 0, -3] as [number, number, number], step: 2, color: "#8b5cf6", status: "current" as const },
+    { pos: [0, 0, -3] as [number, number, number], step: 3, color: "#06b6d4", status: "upcoming" as const },
+    { pos: [4, 0, -3] as [number, number, number], step: 4, color: "#10b981", status: "upcoming" as const },
+    { pos: [8, 0, -3] as [number, number, number], step: 5, color: "#f59e0b", status: "upcoming" as const }
   ], [])
 
   return (
-    <group ref={cardsRef}>
-      {cardPositions.map((card) => (
-        <StepCard
-          key={card.step}
-          position={card.pos}
-          step={card.step}
-          color={card.color}
+    <group ref={panelsRef}>
+      {panelPositions.map((panel) => (
+        <WorkflowPanel
+          key={panel.step}
+          position={panel.pos}
+          step={panel.step}
+          color={panel.color}
+          status={panel.status}
         />
       ))}
     </group>
@@ -334,8 +346,8 @@ export function GetStartedWebGLBackground() {
         {/* Central Progress Hub */}
         <ProgressHub />
         
-        {/* Floating Step Cards */}
-        <FloatingStepCards />
+        {/* Floating Workflow Panels */}
+        <FloatingWorkflowPanels />
         
         {/* Step Connections */}
         <StepConnections />
