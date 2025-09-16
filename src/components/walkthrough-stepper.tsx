@@ -4,7 +4,6 @@ import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
 import { 
   Download, 
   Key, 
@@ -13,14 +12,13 @@ import {
   ArrowRight, 
   CheckCircle,
   QrCode,
-  ExternalLink
 } from 'lucide-react'
 
 interface Step {
   id: number
   title: string
   description: string
-  icon: React.ComponentType<any>
+  icon: React.ComponentType<{ className?: string }>
   details: string
   action?: string
   completed?: boolean

@@ -3,8 +3,7 @@
 import { useState, useEffect, useRef } from 'react'
 import { gsap } from 'gsap'
 import { Button } from '@/components/ui/button'
-import { Badge } from '@/components/ui/badge'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card'
+import { Card, CardContent } from '@/components/ui/card'
 import { 
   Download, 
   Key, 
@@ -13,10 +12,7 @@ import {
   ArrowRight, 
   CheckCircle,
   QrCode,
-  ExternalLink,
   X,
-  Play,
-  SkipForward,
   ArrowLeft,
   ArrowRight as ArrowRightIcon
 } from 'lucide-react'
@@ -25,7 +21,7 @@ interface WalkthroughStep {
   id: number
   title: string
   description: string
-  icon: React.ComponentType<any>
+  icon: React.ComponentType<{ className?: string }>
   details: string
   action?: string
   videoUrl?: string
