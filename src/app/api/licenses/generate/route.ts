@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find an available license
-    const where: any = { status: 'available' }
+    const where = { status: 'available' }
     if (nodeType) {
       where.nodeType = nodeType
     }

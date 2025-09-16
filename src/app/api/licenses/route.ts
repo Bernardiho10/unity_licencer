@@ -8,7 +8,7 @@ export async function GET(request: NextRequest) {
     const nodeType = searchParams.get('nodeType')
     const userId = searchParams.get('userId')
 
-    const where: any = {}
+    const where: Record<string, string | undefined> = {}
     
     if (status) {
       where.status = status
@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     }
 
     // Find an available license
-    const where: any = { status: 'available' }
+    const where: Record<string, string> = { status: 'available' }
     if (nodeType) {
       where.nodeType = nodeType
     }

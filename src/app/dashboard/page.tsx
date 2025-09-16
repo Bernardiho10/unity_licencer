@@ -131,7 +131,7 @@ function StatsCard({
   title: string
   value: number | string
   subtitle: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   color: string
   delay?: number
   isAnimated?: boolean

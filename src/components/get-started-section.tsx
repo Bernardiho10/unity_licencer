@@ -44,7 +44,7 @@ interface StepCard {
   id: number
   title: string
   description: string
-  icon: any
+  icon: React.ComponentType<{ className?: string }>
   details: string
   actionLabel: string
   color: string
